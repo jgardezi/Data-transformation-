@@ -1,5 +1,25 @@
 <?php
 
+/*
+
+chdir('../../../../..'); //the Drupal root, relative to the directory of the path
+require_once './includes/bootstrap.inc';
+require_once './includes/common.inc';
+require_once './includes/module.inc';
+drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+drupal_load('module', 'i18n'); // I had to load i18n, otherwise I got some errors. If you don't use it, remove this
+module_invoke('i18n', 'boot');
+drupal_load('module', 'node');
+module_invoke('node', 'boot');
+
+global $user;
+$user->uid = 1;
+print_r($user);
+$node = node_load(123);
+print_r($node);
+
+*/
+
 // Define the core paths
 // Define them as absolute paths to make sure that require_once works as expected
 
@@ -32,5 +52,3 @@ require_once(LIB_PATH.DS."phpMailer".DS."language".DS."phpmailer.lang-en.php");
 require_once(LIB_PATH.DS.'user.php');
 require_once(LIB_PATH.DS.'photograph.php');
 require_once(LIB_PATH.DS.'comment.php');
-
-?>
