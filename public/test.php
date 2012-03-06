@@ -13,9 +13,14 @@ db_set_active('rgw');
 
 $profiles = new Profiles();
 
-$users = new Users();
-$result = $users->find_all();
+$profiles->merge_data();
 
-krumo($result);
+echo ("<p>Phase 1 done sucessfully!</p>"); 
+
+
+
+
+
+
  
   

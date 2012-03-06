@@ -30,14 +30,9 @@ require_once ('./includes/bootstrap.inc');
 //drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
-// load core objects databaseobject.php
-require_once(LIB_PATH.DS.'database.php');
-require_once(LIB_PATH.DS.'database_object.php');
 
 // load database-related classes
 require_once(LIB_PATH.DS.'users.php');
 require_once(LIB_PATH.DS.'profiles.php');
-require_once(LIB_PATH.DS.'photograph.php');
-require_once(LIB_PATH.DS.'comment.php');
 
 

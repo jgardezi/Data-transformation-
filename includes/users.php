@@ -12,6 +12,7 @@ require_once("initialize.php");
 
 class Users {
     
+    protected static $db_fields = array('uid', 'name', 'mail', 'created');
     //private members
     private $uid;
     private $name;
@@ -60,7 +61,7 @@ class Users {
         return $this->created = $created;
     }
     
-    public function find_all() {
+    public function get_all() {
         
         $object_array = array();
         
@@ -75,25 +76,17 @@ class Users {
         
         //execute the query using drupal 7 database functions
         $result = db_query($sql);
-        
+        db_set_active('default');
         foreach ($result as $record) {
             $object_array[] = $record;
             //krumo($record);
         }
-        
         return $object_array;
     }
     
-    /*private static function instantiate($record) {
+    private static function instantiate($record) {
         // Could check that $record exists and is an array
         $object = new self;
-        // Simple, long-form approach:
-        // $object->id 				= $record['id'];
-        // $object->username 	= $record['username'];
-        // $object->password 	= $record['password'];
-        // $object->first_name = $record['first_name'];
-        // $object->last_name 	= $record['last_name'];
-        // More dynamic, short-form approach:
         foreach ($record as $attribute => $value) {
             //krumo($attribute);
             if ($object->has_attribute($attribute)) {
@@ -107,7 +100,18 @@ class Users {
         // We don't care about the value, we just want to know if the key exists
         // Will return true or false
         return array_key_exists($attribute, $this->attributes());
-    }*/
+    }
+    
+    protected function attributes() {
+        // return an array of attribute names and their values
+        $attributes = array();
+        foreach (self::$db_fields as $field) {
+            if (property_exists($this, $field)) {
+                $attributes[$field] = $this->$field;
+            }
+        }
+        return $attributes;
+    }
     
 }
 
