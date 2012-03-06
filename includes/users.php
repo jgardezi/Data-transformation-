@@ -61,7 +61,10 @@ class Users {
         return $this->created = $created;
     }
     
-    public function get_all() {
+    /*
+     * Fetch the updated user records from research gateway database
+     */
+    public function get_all_rgw() {
         
         $object_array = array();
         
@@ -76,7 +79,7 @@ class Users {
         
         //execute the query using drupal 7 database functions
         $result = db_query($sql);
-        db_set_active('default');
+        
         foreach ($result as $record) {
             $object_array[] = $record;
             //krumo($record);
@@ -84,33 +87,44 @@ class Users {
         return $object_array;
     }
     
-    private static function instantiate($record) {
-        // Could check that $record exists and is an array
-        $object = new self;
-        foreach ($record as $attribute => $value) {
-            //krumo($attribute);
-            if ($object->has_attribute($attribute)) {
-                $object->$attribute = $value;
+    /*
+     * Merge the updated data to profiles database - table users
+     * from the get_all_rgw() function
+     */
+    public function merge_data() {
+
+        $primaryKey = 'uid';
+        //Get the user records
+        //$users = new Users();
+        $result = $this->get_all_rgw();
+
+        db_set_active('profiles');
+        //Perform merge query;
+        foreach ($result as $attribute => $value) {
+            $key = array();
+            $fields = array();
+                      
+            $len = count((array)$value);
+            $key = array_slice((array)$value, -$len, 1);
+            $fields = array_slice((array) $value, 1);
+            
+            /*echo "<pre>";
+                print_r($key);
+                print_r($fields);
+            echo "</pre>"; */
+           
+            try {
+                $query = db_merge('users')
+                        ->key($key)
+                        ->fields($fields)
+                        ->execute();
+            } catch (Exception $e) {
+                print("Merge query error: " . $e . "<br />");
+                // Log the exception to watchdog.
+                watchdog_exception('Merge Query', $e);
             }
+            //die();
         }
-        return $object;
-    }
-    
-    private function has_attribute($attribute) {
-        // We don't care about the value, we just want to know if the key exists
-        // Will return true or false
-        return array_key_exists($attribute, $this->attributes());
-    }
-    
-    protected function attributes() {
-        // return an array of attribute names and their values
-        $attributes = array();
-        foreach (self::$db_fields as $field) {
-            if (property_exists($this, $field)) {
-                $attributes[$field] = $this->$field;
-            }
-        }
-        return $attributes;
     }
     
 }

@@ -11,12 +11,10 @@ $sql = "SELECT DISTINCT u.uid, u.name, u.mail, u.created FROM ur_users u JOIN ur
 db_set_active('rgw');
 */
 
-$profiles = new Profiles();
+$users = new Users();
 
-$profiles->merge_data();
-
+$users->merge_data();
 echo ("<p>Phase 1 done sucessfully!</p>"); 
-
 
 
 
